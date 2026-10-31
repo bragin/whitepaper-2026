@@ -162,15 +162,6 @@ blockquote cite{display:block;font-style:normal;color:var(--muted);font-size:.9r
 .mini p{margin:0;font-size:.92rem;color:var(--muted)}
 .mini .mono{color:var(--fg)}
 
-/* then / now */
-.tn{display:grid;gap:.6rem;margin:1.25rem 0}
-.tn-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:6px;overflow:hidden}
-.tn-row > div{background:var(--surface);padding:.85rem 1rem;min-width:0}
-.tn-row .lab{grid-column:1/-1;background:var(--surface-2);padding:.4rem 1rem;font-family:var(--display);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
-.tn-row b{display:block;font-family:var(--display);font-size:1.35rem;font-weight:700;letter-spacing:-0.02em;overflow-wrap:anywhere}
-.tn-row small{display:block;color:var(--muted);font-size:.85rem;margin-top:.15rem}
-.tn-row .then b{color:var(--muted);font-weight:600}
-
 /* timeline */
 .tl{list-style:none;margin:1.25rem 0;padding:0;border-left:2px solid var(--line)}
 .tl li{position:relative;padding:0 0 1.25rem 1.5rem}
@@ -242,8 +233,7 @@ footer h3{font-size:1rem;font-weight:600;color:var(--fg);margin:0 0 .5rem}
       <a href="#missing"><b>6</b>Missing</a>
       <a href="#math"><b>7</b>The math</a>
       <a href="#fingerprints"><b>8</b>Fingerprints</a>
-      <a href="#thennow"><b>9</b>Then &amp; now</a>
-      <a href="#halloween"><b>10</b>Halloween 2008</a>
+      <a href="#halloween"><b>9</b>Halloween 2008</a>
     </nav>
   </div>
 </header>
@@ -254,7 +244,7 @@ footer h3{font-size:1rem;font-weight:600;color:var(--fg);margin:0 0 .5rem}
       <div class="eyebrow">31 October 2008 &rarr; 31 October 2026</div>
       <h1>Nine pages. <em>Eighteen years.</em></h1>
       <p class="lede">On Halloween 2008 an unknown author posted a link to a short PDF <a href="https://www.metzdowd.com/pipermail/cryptography/2008-October/014810.html" target="_blank" rel="noopener">on a cryptography mailing list</a>. Here is a closer look at what the file is, which words it uses, who it leans on, what it promised, and how those promises have held up.</p>
-      <p class="caption">Everything here is computed from the document itself or from the sources linked in the text. Market figures are as of 31 October 2026.</p>
+      <p class="caption">Everything here is computed from the document itself or from the sources linked in the text. Figures for today&rsquo;s network are as of October 2026 unless a date is given.</p>
     </div>
     <div>
       <div class="hero-facts">
@@ -280,7 +270,7 @@ footer h3{font-size:1rem;font-weight:600;color:var(--fg);margin:0 0 .5rem}
       <p class="caption">Smaller than most photos on your phone.</p>
     </aside>
     <div class="content">
-      <p>Before reading a word, it is worth looking at the object. A PDF carries a small record of how it was made, and this one says almost nothing. No author. No company. No title. Somebody opened a free word processor on a Tuesday in March 2009 and hit export.</p>
+      <p>Before reading a word, it is worth looking at the file itself. A PDF carries a small record of how it was made, and this one says almost nothing. No author. No company. No title. Somebody opened a free word processor on a Tuesday in March 2009 and hit export. This is the rare occasion when such low-level details are of interest to anyone besides a GPT model.</p>
       <div class="card kv">
         <div class="k">File name</div><div class="v">bitcoin.pdf</div>
         <div class="k">PDF version</div><div class="v">1.4</div>
@@ -295,7 +285,7 @@ footer h3{font-size:1rem;font-weight:600;color:var(--fg);margin:0 0 .5rem}
         <div class="k">Not set</div><div class="v">Title, Author, Subject, Keywords, Modified date</div>
       </div>
       <h3>Second edition</h3>
-      <p>This is not the file people downloaded on 31 October 2008. It is a lightly revised version Satoshi uploaded on 24 March 2009, and it is the one everybody has been reading since. <a href="https://gwern.net/doc/bitcoin/2008-nakamoto" target="_blank" rel="noopener">The earlier draft</a>, sent privately to a few cryptographers in October 2008, survives and differs only in wording. Its abstract said payments could flow <em>&ldquo;without the burdens of going through a financial institution&rdquo;</em>; the final version drops &ldquo;the burdens of&rdquo;. &ldquo;Doublespending&rdquo; gained a hyphen. A paragraph on transaction fees was added. Nothing in the design changed.</p>
+      <p>Strictly speaking, this file is the second edition of the paper released on 31 October 2008. It is a lightly revised version that Satoshi uploaded on 24 March 2009. <a href="https://gwern.net/doc/bitcoin/2008-nakamoto" target="_blank" rel="noopener">The earlier draft</a>, sent privately to a few cryptographers in October 2008, doesn't differ much from what we have now. Its abstract said payments could flow <em>&ldquo;without the burdens of going through a financial institution&rdquo;</em>; the final version drops &ldquo;the burdens of&rdquo;. &ldquo;Doublespending&rdquo; gained a hyphen. A paragraph on transaction fees was added. Nothing else changed. Though we can't analyse the draft's metadata, it most probably leaked nothing.</p>
       <h3>The paper lives inside the thing it describes</h3>
       <p>In April 2013 someone paid a small fee to write the entire PDF into the Bitcoin blockchain, chopped into hundreds of pieces disguised as payment outputs (<a href="https://mempool.space/tx/54e48e5f5c656b26c3bca14a8c95aa583d07ebe84dde3b7dd4a78f4e4186e713" target="_blank" rel="noopener">block 230,009</a>). Every full node on the network now stores a copy of the paper that explains the network. Any copy can be checked against the fingerprint above.</p>
       <div class="tool">
@@ -327,7 +317,7 @@ footer h3{font-size:1rem;font-weight:600;color:var(--fg);margin:0 0 .5rem}
         <p class="sub">Whole documents, including references, counted from public copies of each paper and rounded. The Bitcoin figure is main text only.</p>
         <div class="bars" id="lenbars"></div>
       </div>
-      <p>Where do the words go? The longest section by far is &ldquo;Calculations&rdquo;, the attack math in Part 7 of this page. Roughly one word in five is spent proving that cheating does not pay. The famous ideas, the chain of blocks and the proof-of-work, each get a page or less.</p>
+      <p>The longest section by far is &ldquo;Calculations&rdquo;, the attack math in Part 7 of this page. Roughly one word in five is spent proving that cheating does not pay. The famous ideas, the chain of blocks and the proof-of-work, each get a page or less.</p>
       <div class="chart">
         <h4>Words per section</h4>
         <p class="sub">The abstract and the twelve numbered sections.</p>
@@ -371,7 +361,7 @@ footer h3{font-size:1rem;font-weight:600;color:var(--fg);margin:0 0 .5rem}
       </div>
       <p>Two near misses. The phrase &ldquo;chain of blocks&rdquo; appears once, in the section on attackers; the single word &ldquo;blockchain&rdquo; would not become common for several years. And the only &ldquo;miners&rdquo; in the paper are gold miners, in a comparison: new coins are &ldquo;analogous to gold miners expending resources to add gold to circulation.&rdquo;</p>
       <h3>Trust, attackers and honest nodes</h3>
-      <p>The paper&rsquo;s moral vocabulary is small and repeated. <em>Trust</em> or <em>trusted</em> appears 13 times, almost always as something to remove. <em>Honest</em> appears 15 times and <em>attacker</em> 19, so the paper spends more words on the villain than on the hero. Money words are rare: <em>money</em> three times, <em>cash</em> twice, <em>bank</em> once, <em>gold</em> twice, <em>price</em> never.</p>
+      <p><em>Trust</em> or <em>trusted</em> (the absence of which is critical to the network) appears 13 times, almost always as something to remove. <em>Honest</em> appears 15 times and <em>attacker</em> 19, so the paper spends more words on the villain than on the hero. Money words are rare: <em>money</em> three times, <em>cash</em> twice, <em>bank</em> once, <em>gold</em> twice, <em>price</em> never.</p>
       <div class="chips">
         <span class="chip">trust / trusted<b>13</b></span>
         <span class="chip">honest<b>15</b></span>
@@ -428,7 +418,7 @@ footer h3{font-size:1rem;font-weight:600;color:var(--fg);margin:0 0 .5rem}
         <div class="score-row"><span class="status s-kept">Kept</span><div><h4>Non-reversible transactions</h4><p>The introduction treats reversible payments as a weakness of the banking system. A Bitcoin payment stays paid no matter what (with an exception of a <a href="https://en.bitcoin.it/wiki/Majority_attack" target="_blank" rel="noopener">51% attack</a>, but that's another story). The rule has held under real pressure. Over the years thieves have <a href="https://en.wikipedia.org/wiki/2026_Binance_hack" target="_blank" rel="noopener">stolen many thousands of bitcoin</a>, and victims wanted them back. The chain was never rewritten to return them. Ethereum chose differently: in 2016 it <a href="https://en.wikipedia.org/wiki/The_DAO" target="_blank" rel="noopener">changed its own rules</a> to recover about 3.6 million ether drained from a project called The DAO, and the network split in two.</p></div></div>
         <div class="score-row"><span class="status s-faded">Faded</span><div><h4>&ldquo;Small casual transactions&rdquo;</h4><p>The introduction complains that the cost of settling disputes cuts off &ldquo;small casual transactions&rdquo;. The paper never promises to fix this, but it is one of the problems it hopes to leave behind. On today&rsquo;s chain a transaction can cost more than a coffee during busy periods, so small payments moved to layers built on top, like Liquid and Lightning.</p></div></div>
         <div class="score-row"><span class="status s-evolved">Evolved</span><div><h4>&ldquo;One-CPU-one-vote&rdquo;</h4><p>Satoshi imagined ordinary computers voting with their processors. Within four years purpose-built chips made CPUs irrelevant, and the vote concentrated in a handful of mining pools and industrial farms. The chain with the most computing power behind it still wins, as the paper says it should, but a home computer now has no real say in the result.</p></div></div>
-        <div class="score-row"><span class="status s-kept">Kept</span><div><h4>Difficulty adjusts to keep blocks on schedule</h4><p>The paper describes a &ldquo;moving average targeting an average number of blocks per hour&rdquo;. The network does a simpler version: every 2,016 blocks, roughly two weeks, it adjusts the difficulty based on how long those blocks took. Blocks still arrive about every ten minutes, even though computing power has grown a hundred-trillion-fold.</p></div></div>
+        <div class="score-row"><span class="status s-kept">Kept</span><div><h4>Difficulty adjusts to keep blocks on schedule</h4><p>The paper describes a &ldquo;moving average targeting an average number of blocks per hour&rdquo;. The network does a simpler version: every 2,016 blocks, roughly two weeks, it adjusts the difficulty based on how long those blocks took. Blocks still arrive about every ten minutes, even though <a href="https://www.pickaxe.io/resources/news/bitcoin-hashrate-surges-past-1000-ehs-amid-difficulty-hikes" target="_blank" rel="noopener">computing power</a> has grown a hundred-trillion-fold.</p></div></div>
         <div class="score-row"><span class="status s-kept">Kept</span><div><h4>Storage will not be a problem</h4><p>Section 7 says old spent transactions can be discarded, and estimates the block headers that remain at 4.2 MB per year. At roughly 975,000 blocks, headers today total about 78 MB, against the paper&rsquo;s 75 MB. The full history with every transaction is over 700 GB, which the paper says most users need not keep. Bitcoin Core added this trimming, called pruning, in 2015, and a pruned node runs comfortably on a few gigabytes.</p></div></div>
         <div class="score-row"><span class="status s-evolved">Evolved</span><div><h4>Privacy through anonymous keys</h4><p>The paper suggests a fresh key for every payment, and most wallets now do this automatically. But it also admits that &ldquo;some linking is still unavoidable&rdquo;, and an industry of chain-analysis firms now sells that kind of tracing to exchanges and governments.</p></div></div>
         <div class="score-row"><span class="status s-evolved">Evolved</span><div><h4>Checking payments without the full history</h4><p>Section 8 describes a shortcut: keep only the block headers and you can still confirm a payment without storing every transaction. <a href="https://en.bitcoin.it/wiki/Thin_Client_Security#Thin_Clients" target="_blank" rel="noopener">Some wallets work this way, while others simply ask a server</a>. The paper&rsquo;s extra safeguard, alerts from nodes when they spot an invalid block, was never built.</p></div></div>
@@ -526,36 +516,10 @@ footer h3{font-size:1rem;font-weight:600;color:var(--fg);margin:0 0 .5rem}
 </section>
 
 <!-- 9 -->
-<section class="part" id="thennow">
-  <div class="wrap part-grid">
-    <aside class="margin">
-      <div class="partno">PART 9</div>
-      <h2>Then and now</h2>
-      <div class="big num">95.7%</div>
-      <p class="caption">of all bitcoin that will ever exist has already been created.</p>
-    </aside>
-    <div class="content">
-      <p>The paper describes a network of a few hobbyists&rsquo; PCs. Here is the world it assumed set against the world on its eighteenth birthday. Figures are rounded, and the links lead to their sources.</p>
-      <div class="tn">
-        <div class="tn-row"><div class="lab">Price of one bitcoin</div><div class="then"><b>none</b><small>No exchange existed. The first quoted rate, in October 2009, was 1,309 bitcoin per US dollar.</small></div><div><b class="num">&asymp; $77,000</b><small><a href="https://altii.de/the-altii-btc-report-2026-10-31" target="_blank" rel="noopener">31 Oct 2026</a>. <a href="https://www.coingecko.com/en/coins/bitcoin" target="_blank" rel="noopener">Peak so far</a> about $126,000, October 2025.</small></div></div>
-        <div class="tn-row"><div class="lab">Computing power securing the chain</div><div class="then"><b>one PC</b><small>A few million hash attempts per second in January 2009.</small></div><div><b class="num">&asymp; 1,100 EH/s</b><small><a href="https://www.pickaxe.io/resources/news/bitcoin-hashrate-surges-past-1000-ehs-amid-difficulty-hikes" target="_blank" rel="noopener">As of 24 Oct 2026</a>. Over a sextillion attempts per second: a hundred-trillion-fold increase.</small></div></div>
-        <div class="tn-row"><div class="lab">Coins in existence</div><div class="then"><b>0</b><small>The first 50 were created on 3 January 2009.</small></div><div><b class="num">20.1 million</b><small><a href="https://altii.de/the-altii-btc-report-2026-10-31" target="_blank" rel="noopener">95.7% of the 21 million cap</a>.</small></div></div>
-        <div class="tn-row"><div class="lab">Blocks</div><div class="then"><b>0</b></div><div><b class="num">&asymp; 975,000</b><small>Still arriving about every ten minutes.</small></div></div>
-        <div class="tn-row"><div class="lab">Reward for finding a block</div><div class="then"><b>50 BTC</b><small>Worth nothing in dollars.</small></div><div><b class="num">3.125 BTC</b><small>After four halvings. Roughly $240,000 at today&rsquo;s price.</small></div></div>
-        <div class="tn-row"><div class="lab">Electricity</div><div class="then"><b>&ldquo;CPU time and electricity&rdquo;</b><small>Mentioned once, as the cost that makes coins scarce.</small></div><div><b class="num">&asymp; 138 TWh / year</b><small>Cambridge estimate, 2026, <a href="https://www.solcard.cc/blog/how-much-energy-does-bitcoin-use" target="_blank" rel="noopener">reported by SolCard</a>. In the range of Poland&rsquo;s annual consumption.</small></div></div>
-        <div class="tn-row"><div class="lab">Size of the full record</div><div class="then"><b>4.2 MB / year</b><small>The paper&rsquo;s estimate for block headers alone, which has held.</small></div><div><b class="num">&gt; 700 GB</b><small>Every transaction since 2009. Headers alone: about 78 MB.</small></div></div>
-        <div class="tn-row"><div class="lab">Legal status</div><div class="then"><b>unmentioned</b><small>The paper never discusses governments.</small></div><div><b>legal tender once</b><small>El Salvador adopted bitcoin as legal tender in 2021 and <a href="https://en.wikipedia.org/wiki/Bitcoin_in_El_Salvador" target="_blank" rel="noopener">rescinded the status in 2025</a> under an IMF agreement.</small></div></div>
-        <div class="tn-row"><div class="lab">How people hold it</div><div class="then"><b>your own keys</b><small>The only way the paper imagines.</small></div><div><b>11 US ETFs</b><small>Spot bitcoin funds began trading in January 2024. Many holders never touch a key.</small></div></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- 10 -->
 <section class="part" id="halloween">
   <div class="wrap part-grid">
     <aside class="margin">
-      <div class="partno">PART 10</div>
+      <div class="partno">PART 9</div>
       <h2>Halloween 2008</h2>
       <div class="big num">14:10<small>EDT</small></div>
       <p class="caption">The time stamp on the announcement, a Friday afternoon.</p>
