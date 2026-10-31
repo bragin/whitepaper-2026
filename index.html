@@ -1,0 +1,752 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>9 pages. 18 years.</title>
+<meta name="description" content="A plain-language, ten-part look at the nine pages Satoshi Nakamoto published on 31 October 2008: the file, the words, the sources, the math, and what happened next.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a long-scroll dossier. Each part is a two-column spread: a sticky
+   margin column with the part number and one headline figure, and a reading
+   column of prose, charts and small tools. Stacks to one column on phones. */
+:root{
+  --bg:#f3f4f2;          /* cool paper */
+  --surface:#ffffff;
+  --surface-2:#e9ebe8;
+  --fg:#15191c;
+  --muted:#5b6368;
+  --line:#d3d8d5;
+  --accent:#c96a06;      /* series 1, validated */
+  --accent-2:#1a73b8;    /* series 2, validated */
+  --accent-soft:#fbe9d6;
+  --good:#2e7d32; --good-soft:#e3f1e4;
+  --warn:#9a6a00; --warn-soft:#f6ecd2;
+  --bad:#b3261e;  --bad-soft:#f8e1df;
+  --neutral-soft:#e4e7ea;
+  --display:"Archivo",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --body:"Source Serif 4",Georgia,"Times New Roman",serif;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#121416; --surface:#1b1e21; --surface-2:#23272b; --fg:#e7e6e1; --muted:#9aa3a8; --line:#2f3539;
+    --accent:#cf7a12; --accent-2:#3f8fd6; --accent-soft:#3a2a14;
+    --good:#7bc47f; --good-soft:#1f3322; --warn:#e0b14a; --warn-soft:#3a3016; --bad:#f08c84; --bad-soft:#3d2220;
+    --neutral-soft:#2a2f33; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#121416; --surface:#1b1e21; --surface-2:#23272b; --fg:#e7e6e1; --muted:#9aa3a8; --line:#2f3539;
+  --accent:#cf7a12; --accent-2:#3f8fd6; --accent-soft:#3a2a14;
+  --good:#7bc47f; --good-soft:#1f3322; --warn:#e0b14a; --warn-soft:#3a3016; --bad:#f08c84; --bad-soft:#3d2220;
+  --neutral-soft:#2a2f33; color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto} *{animation:none!important;transition:none!important}}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--body);font-size:1.0625rem;line-height:1.6;-webkit-font-smoothing:antialiased}
+a{color:var(--accent-2);text-decoration-thickness:1px;text-underline-offset:2px}
+a:focus-visible,button:focus-visible,input:focus-visible,[tabindex]:focus-visible{outline:2px solid var(--accent-2);outline-offset:2px}
+h1,h2,h3,h4{font-family:var(--display);line-height:1.1;letter-spacing:-0.01em;text-wrap:balance;margin:0}
+p{margin:0 0 1em}
+code,.mono{font-family:var(--mono);font-size:.92em}
+.wrap{max-width:1120px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.eyebrow{font-family:var(--display);font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.num{font-variant-numeric:tabular-nums}
+
+/* top nav */
+.topbar{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.topbar .wrap{display:flex;align-items:center;gap:1rem;height:52px}
+.brand{font-family:var(--display);font-weight:700;font-size:.95rem;white-space:nowrap}
+.brand span{color:var(--accent)}
+.nav{display:flex;gap:.25rem;overflow-x:auto;scrollbar-width:none;min-width:0;flex:1}
+.nav::-webkit-scrollbar{display:none}
+.nav a{font-family:var(--display);font-size:.78rem;font-weight:500;color:var(--muted);text-decoration:none;padding:.35rem .55rem;border-radius:4px;white-space:nowrap}
+.nav a:hover{color:var(--fg);background:var(--surface-2)}
+.nav a b{color:var(--accent);font-weight:600;margin-right:.3em}
+
+/* hero */
+.hero{padding-block:4.5rem 3rem;border-bottom:1px solid var(--line)}
+.hero-grid{display:grid;grid-template-columns:1.3fr 1fr;gap:3rem;align-items:end}
+.hero h1{font-size:clamp(2.4rem,6vw,4.6rem);font-weight:700;letter-spacing:-0.03em;margin:.6rem 0 1rem}
+.hero h1 em{font-style:normal;color:var(--accent)}
+.lede{font-size:1.2rem;max-width:36rem;color:var(--fg)}
+.hero-facts{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line)}
+.hero-facts div{background:var(--surface);padding:1rem}
+.hero-facts b{display:block;font-family:var(--display);font-size:1.7rem;font-weight:700;letter-spacing:-0.02em}
+.hero-facts small{color:var(--muted);font-family:var(--display);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase}
+.hash{margin-top:1rem;font-family:var(--mono);font-size:.78rem;word-break:break-all;color:var(--muted);line-height:1.5}
+.hash b{color:var(--fg);font-weight:500}
+
+/* parts */
+.part{padding-block:4rem;border-bottom:1px solid var(--line)}
+.part-grid{display:grid;grid-template-columns:280px minmax(0,1fr);gap:3rem}
+.margin{position:sticky;top:72px;align-self:start}
+.partno{font-family:var(--display);font-weight:700;font-size:.8rem;color:var(--accent);letter-spacing:.1em}
+.part h2{font-size:clamp(1.6rem,3vw,2.2rem);font-weight:700;margin:.4rem 0 1rem}
+.big{font-family:var(--display);font-weight:700;font-size:clamp(2.6rem,5vw,3.8rem);letter-spacing:-0.03em;line-height:1;margin:.5rem 0 .25rem}
+.big small{display:block;font-size:.95rem;font-weight:600;color:var(--muted);letter-spacing:0;margin-top:.4rem;line-height:1.3}
+.score-row .status{justify-self:start}
+.caption{color:var(--muted);font-size:.95rem}
+.content{min-width:0}
+.content > p:first-child{font-size:1.15rem}
+.content h3{font-size:1.1rem;font-weight:600;margin:2rem 0 .6rem}
+.note{border-left:3px solid var(--accent);padding:.6rem 1rem;background:var(--surface);margin:1.5rem 0;font-size:.98rem}
+.note p:last-child{margin:0}
+blockquote{margin:1.5rem 0;padding:0 0 0 1.25rem;border-left:3px solid var(--line);font-style:italic;color:var(--fg)}
+blockquote cite{display:block;font-style:normal;color:var(--muted);font-size:.9rem;margin-top:.4rem}
+
+/* data table / forensic card */
+.card{background:var(--surface);border:1px solid var(--line);border-radius:6px}
+.kv{display:grid;grid-template-columns:max-content 1fr;gap:0}
+.kv div{padding:.6rem .9rem;border-bottom:1px solid var(--line);font-size:.95rem}
+.kv div:nth-last-child(-n+2){border-bottom:0}
+.kv .k{font-family:var(--display);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600;padding-top:.75rem}
+.kv .v{font-family:var(--mono);font-size:.86rem;word-break:break-word}
+
+/* charts */
+.chart{margin:1.5rem 0;background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:1rem 1rem .75rem}
+.chart h4{font-size:.95rem;font-weight:600;margin-bottom:.15rem}
+.chart .sub{color:var(--muted);font-size:.85rem;margin:0 0 .75rem}
+.chart svg{display:block;width:100%;height:auto;max-width:100%;font-family:var(--display)}
+.chart text{fill:var(--fg);font-size:13px}
+.chart text.muted{fill:var(--muted)}
+.chart .grid line{stroke:var(--line);stroke-width:1}
+.chart .axis{stroke:var(--line)}
+.legend{display:flex;gap:1rem;flex-wrap:wrap;font-family:var(--display);font-size:.8rem;color:var(--muted);margin-top:.5rem}
+.legend i{display:inline-block;width:14px;height:3px;border-radius:2px;vertical-align:middle;margin-right:.4em}
+.tip{position:absolute;pointer-events:none;background:var(--fg);color:var(--bg);font-family:var(--display);font-size:.78rem;padding:.3rem .5rem;border-radius:4px;transform:translate(-50%,-130%);white-space:nowrap;opacity:0;transition:opacity .12s}
+.tip.show{opacity:1}
+.chart-wrap{position:relative}
+
+/* bars built in HTML */
+.bars{display:grid;gap:.45rem;margin:1rem 0}
+.bar{display:grid;grid-template-columns:150px minmax(0,1fr) 64px;gap:.75rem;align-items:center;font-size:.9rem}
+.bar .lbl{font-family:var(--display);font-size:.82rem;color:var(--fg);text-align:right;min-width:0;overflow-wrap:anywhere}
+.bar .lbl a{color:inherit;text-decoration:none;border-bottom:1px solid var(--line)}
+.bar .lbl a:hover{color:var(--accent)}
+.bar .track{height:14px;background:var(--surface-2);border-radius:0 4px 4px 0;position:relative;overflow:hidden}
+.bar .fill{position:absolute;left:0;top:0;bottom:0;background:var(--accent);border-radius:0 4px 4px 0}
+.bar.hl .fill{background:var(--accent-2)}
+.bar .val{font-family:var(--mono);font-size:.82rem;color:var(--muted);text-align:right}
+
+/* chips */
+.chips{display:flex;flex-wrap:wrap;gap:.45rem;margin:.75rem 0 1.25rem}
+.chip{font-family:var(--mono);font-size:.82rem;padding:.25rem .6rem;border:1px solid var(--line);border-radius:999px;background:var(--surface);color:var(--fg)}
+.chip.zero{text-decoration:line-through;color:var(--muted)}
+.chip b{font-weight:500;color:var(--accent);margin-left:.35em}
+
+/* scorecard */
+.score{display:grid;gap:.6rem;margin:1.25rem 0}
+.score-row{display:grid;grid-template-columns:120px minmax(0,1fr);gap:1rem;padding:.9rem 1rem;background:var(--surface);border:1px solid var(--line);border-radius:6px;align-items:start}
+.score-row h4{font-size:1rem;font-weight:600;margin-bottom:.25rem}
+.score-row p{margin:0;font-size:.95rem;color:var(--fg)}
+.status{display:inline-flex;align-items:center;gap:.4em;font-family:var(--display);font-size:.72rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:.3rem .55rem;border-radius:4px;white-space:nowrap}
+.status::before{content:"";width:8px;height:8px;border-radius:50%;background:currentColor}
+.s-kept{background:var(--good-soft);color:var(--good)}
+.s-evolved{background:var(--warn-soft);color:var(--warn)}
+.s-waiting{background:var(--neutral-soft);color:var(--muted)}
+.s-faded{background:var(--bad-soft);color:var(--bad)}
+
+/* cards grid */
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.75rem;margin:1.25rem 0}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.75rem;margin:1.25rem 0}
+.mini{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:.9rem 1rem}
+.mini h4{font-size:.98rem;font-weight:600;margin-bottom:.3rem}
+.mini p{margin:0;font-size:.92rem;color:var(--muted)}
+.mini .mono{color:var(--fg)}
+
+/* then / now */
+.tn{display:grid;gap:.6rem;margin:1.25rem 0}
+.tn-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:6px;overflow:hidden}
+.tn-row > div{background:var(--surface);padding:.85rem 1rem;min-width:0}
+.tn-row .lab{grid-column:1/-1;background:var(--surface-2);padding:.4rem 1rem;font-family:var(--display);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.tn-row b{display:block;font-family:var(--display);font-size:1.35rem;font-weight:700;letter-spacing:-0.02em;overflow-wrap:anywhere}
+.tn-row small{display:block;color:var(--muted);font-size:.85rem;margin-top:.15rem}
+.tn-row .then b{color:var(--muted);font-weight:600}
+
+/* timeline */
+.tl{list-style:none;margin:1.25rem 0;padding:0;border-left:2px solid var(--line)}
+.tl li{position:relative;padding:0 0 1.25rem 1.5rem}
+.tl li::before{content:"";position:absolute;left:-7px;top:.45rem;width:12px;height:12px;border-radius:50%;background:var(--bg);border:2px solid var(--accent)}
+.tl li.key::before{background:var(--accent)}
+.tl time{display:block;font-family:var(--display);font-size:.78rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.tl b{font-family:var(--display);font-weight:600;font-size:1rem}
+.tl p{margin:.2rem 0 0;font-size:.95rem}
+
+/* tools */
+.tool{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:1rem 1.1rem;margin:1.5rem 0}
+.tool label{display:block;font-family:var(--display);font-size:.8rem;font-weight:600;color:var(--muted);margin-bottom:.35rem}
+.tool input[type=range]{width:100%;accent-color:var(--accent)}
+.sliders{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;align-items:end}
+.result{margin-top:1rem;display:grid;grid-template-columns:auto 1fr;gap:1rem;align-items:center}
+.result b{font-family:var(--display);font-size:2.2rem;font-weight:700;letter-spacing:-0.02em;white-space:nowrap}
+.result span{font-size:.95rem;color:var(--muted)}
+.drop{border:2px dashed var(--line);border-radius:6px;padding:1.25rem;text-align:center;color:var(--muted);font-size:.95rem;cursor:pointer;background:var(--surface);transition:border-color .15s}
+.drop.over{border-color:var(--accent)}
+.drop input{display:none}
+.drop .btn{display:inline-block;margin-top:.5rem;font-family:var(--display);font-size:.85rem;font-weight:600;padding:.45rem .9rem;border:1px solid var(--line);border-radius:4px;background:var(--surface-2);color:var(--fg)}
+.verdict{margin-top:.75rem;font-size:.95rem;padding:.6rem .8rem;border-radius:4px;display:none}
+.verdict.ok{display:block;background:var(--good-soft);color:var(--good)}
+.verdict.no{display:block;background:var(--bad-soft);color:var(--bad)}
+.verdict code{display:block;margin-top:.3rem;word-break:break-all;color:inherit;font-size:.8rem}
+
+/* footer */
+footer{padding-block:3rem 4rem;color:var(--muted);font-size:.92rem}
+footer h3{font-size:1rem;font-weight:600;color:var(--fg);margin:0 0 .5rem}
+
+@media (max-width:860px){
+  .hero-grid{grid-template-columns:1fr;gap:2rem}
+  .part-grid{grid-template-columns:1fr;gap:1.25rem}
+  .margin{position:static}
+  .grid3{grid-template-columns:1fr 1fr}
+}
+@media (max-width:560px){
+  .hero{padding-block:3rem 2rem}
+  .hero-facts{grid-template-columns:1fr 1fr}
+  .grid2,.grid3{grid-template-columns:1fr}
+  .bar{grid-template-columns:96px minmax(0,1fr) 58px}
+  .score-row{grid-template-columns:1fr;gap:.5rem}
+  .sliders{grid-template-columns:1fr}
+  .kv{grid-template-columns:1fr}
+  .kv div{border-bottom:0;padding-block:.35rem}
+  .kv .k{padding-top:.75rem}
+  .kv .v{padding-bottom:.6rem;border-bottom:1px solid var(--line)}
+  .kv div:nth-last-child(1){border-bottom:0}
+  .part{padding-block:2.75rem}
+}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wrap">
+    <div class="brand">The Whitepaper <span>at 18</span></div>
+    <nav class="nav" aria-label="Parts">
+      <a href="#file"><b>1</b>The file</a>
+      <a href="#length"><b>2</b>Length</a>
+      <a href="#words"><b>3</b>Words</a>
+      <a href="#sources"><b>4</b>Sources</a>
+      <a href="#promises"><b>5</b>Promises</a>
+      <a href="#missing"><b>6</b>Missing</a>
+      <a href="#math"><b>7</b>The math</a>
+      <a href="#fingerprints"><b>8</b>Fingerprints</a>
+      <a href="#thennow"><b>9</b>Then &amp; now</a>
+      <a href="#halloween"><b>10</b>Halloween 2008</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="eyebrow">31 October 2008 &rarr; 31 October 2026</div>
+      <h1>Nine pages. <em>Eighteen years.</em></h1>
+      <p class="lede">On Halloween 2008 an unknown author posted a link to a short PDF <a href="https://www.metzdowd.com/pipermail/cryptography/2008-October/014810.html" target="_blank" rel="noopener">on a cryptography mailing list</a>. Here is a closer look at what the file is, which words it uses, who it leans on, what it promised, and how those promises have held up.</p>
+      <p class="caption">Everything here is computed from the document itself or from the sources linked in the text. Market figures are as of 31 October 2026.</p>
+    </div>
+    <div>
+      <div class="hero-facts">
+        <div><b class="num">9</b><small>pages</small></div>
+        <div><b class="num">3,315</b><small>words of text</small></div>
+        <div><b class="num">8</b><small>references</small></div>
+        <div><b class="num">8</b><small>diagrams</small></div>
+        <div><b class="num">1</b><small>code listing</small></div>
+        <div><b class="num">15</b><small>minute read</small></div>
+      </div>
+      <div class="hash"><b>SHA-256</b> b1674191a88ec5cdd733e4240a81803105dc412d6c6708d53ab94fc248f4f553<br><a href="https://bitcoin.org/bitcoin.pdf" target="_blank" rel="noopener">Open the PDF</a> &middot; 184,292 bytes</div>
+    </div>
+  </div>
+</section>
+
+<!-- 1 -->
+<section class="part" id="file">
+  <div class="wrap part-grid">
+    <aside class="margin">
+      <div class="partno">PART 1</div>
+      <h2>The file itself</h2>
+      <div class="big num">184,292<small>bytes</small></div>
+      <p class="caption">Smaller than most photos on your phone.</p>
+    </aside>
+    <div class="content">
+      <p>Before reading a word, it is worth looking at the object. A PDF carries a small record of how it was made, and this one says almost nothing. No author. No company. No title. Somebody opened a free word processor on a Tuesday in March 2009 and hit export.</p>
+      <div class="card kv">
+        <div class="k">File name</div><div class="v">bitcoin.pdf</div>
+        <div class="k">PDF version</div><div class="v">1.4</div>
+        <div class="k">Creator</div><div class="v">Writer</div>
+        <div class="k">Producer</div><div class="v">OpenOffice.org 2.4</div>
+        <div class="k">Creation date</div><div class="v">2009-03-24 11:33:15 &minus;06:00</div>
+        <div class="k">Language</div><div class="v">en-GB</div>
+        <div class="k">Pages</div><div class="v">9, each 612 &times; 792 pt (US Letter)</div>
+        <div class="k">Fonts embedded</div><div class="v">Century Schoolbook Bold, Times New Roman (regular, bold, italic), Arial, Courier New, OpenSymbol</div>
+        <div class="k">Document ID</div><div class="v">CA1B0A44BD542453BEF918FFCD46DC04</div>
+        <div class="k">Document checksum</div><div class="v">6F72EA7514DFAD23FABCC7A550021AF7</div>
+        <div class="k">Not set</div><div class="v">Title, Author, Subject, Keywords, Modified date</div>
+      </div>
+      <h3>Second edition</h3>
+      <p>This is not the file people downloaded on 31 October 2008. It is a lightly revised version Satoshi uploaded on 24 March 2009, and it is the one everybody has been reading since. <a href="https://gwern.net/doc/bitcoin/2008-nakamoto" target="_blank" rel="noopener">The earlier draft</a>, sent privately to a few cryptographers in October 2008, survives and differs only in wording. Its abstract said payments could flow <em>&ldquo;without the burdens of going through a financial institution&rdquo;</em>; the final version drops &ldquo;the burdens of&rdquo;. &ldquo;Doublespending&rdquo; gained a hyphen. A paragraph on transaction fees was added. Nothing in the design changed.</p>
+      <h3>The paper lives inside the thing it describes</h3>
+      <p>In April 2013 someone paid a small fee to write the entire PDF into the Bitcoin blockchain, chopped into hundreds of pieces disguised as payment outputs (<a href="https://mempool.space/tx/54e48e5f5c656b26c3bca14a8c95aa583d07ebe84dde3b7dd4a78f4e4186e713" target="_blank" rel="noopener">block 230,009</a>). Every full node on the network now stores a copy of the paper that explains the network. Any copy can be checked against the fingerprint above.</p>
+      <div class="tool">
+        <label>Check your own copy</label>
+        <div class="drop" id="drop" tabindex="0" role="button" aria-label="Drop a PDF to check its fingerprint">
+          Drop any <code>bitcoin.pdf</code> here to see if it is byte-for-byte the real one. The check runs in your browser; nothing is uploaded.
+          <br><span class="btn">Choose a file</span>
+          <input type="file" id="fileinput" accept=".pdf,application/pdf">
+        </div>
+        <div class="verdict" id="verdict"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 2 -->
+<section class="part" id="length">
+  <div class="wrap part-grid">
+    <aside class="margin">
+      <div class="partno">PART 2</div>
+      <h2>Short, for a famous paper</h2>
+      <div class="big num">3,315<small>words</small></div>
+      <p class="caption">Main text, title through conclusion. 3,466 with the reference list.</p>
+    </aside>
+    <div class="content">
+      <p>The document that launched a trillion-dollar asset is about a fifteen-minute read. Among the famous papers of science, that is on the short side: a few times longer than Watson and Crick&rsquo;s one-page DNA paper, but a fraction of the length of Diffie and Hellman&rsquo;s paper on key exchange or Shannon&rsquo;s founding paper on information theory. Its 141 sentences average 24 words each, a length typical of a technical paper. Most of it is plain English about who trusts whom.</p>
+      <div class="chart">
+        <h4>Word counts, for scale</h4>
+        <p class="sub">Whole documents, including references, counted from public copies of each paper and rounded. The Bitcoin figure is main text only.</p>
+        <div class="bars" id="lenbars"></div>
+      </div>
+      <p>Where do the words go? The longest section by far is &ldquo;Calculations&rdquo;, the attack math in Part 7 of this page. Roughly one word in five is spent proving that cheating does not pay. The famous ideas, the chain of blocks and the proof-of-work, each get a page or less.</p>
+      <div class="chart">
+        <h4>Words per section</h4>
+        <p class="sub">The abstract and the twelve numbered sections.</p>
+        <div class="bars" id="secbars"></div>
+      </div>
+      <div class="note"><p>Reading-ease score: 41 out of 100 on the Flesch scale, in the &ldquo;difficult&rdquo; band shared by academic papers and legal text. The sentences are long, but the vocabulary is mostly ordinary.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 3 -->
+<section class="part" id="words">
+  <div class="wrap part-grid">
+    <aside class="margin">
+      <div class="partno">PART 3</div>
+      <h2>What the paper says, and what it never says</h2>
+      <div class="big num">0<small>&times; &ldquo;blockchain&rdquo;</small></div>
+      <p class="caption">And only one &ldquo;Bitcoin&rdquo;, in the title.</p>
+    </aside>
+    <div class="content">
+      <p>Count the words and a different paper appears from the one in the headlines. It is a paper about blocks, transactions and hashes, written for an audience of cryptographers. The word <em>Bitcoin</em> appears exactly once, in the title. The body never names the system at all; it is &ldquo;the network&rdquo; or &ldquo;the system&rdquo;.</p>
+      <div class="chart">
+        <h4>Most-used meaningful words</h4>
+        <p class="sub">Singular and plural counted together. Common function words excluded.</p>
+        <div class="bars" id="wordbars"></div>
+      </div>
+      <h3>Words that are not in the paper</h3>
+      <p>Much of today&rsquo;s vocabulary came later, from the code, the forums and the press.</p>
+      <div class="chips">
+        <span class="chip zero">blockchain</span>
+        <span class="chip zero">cryptocurrency</span>
+        <span class="chip zero">mining</span>
+        <span class="chip zero">wallet</span>
+        <span class="chip zero">ledger</span>
+        <span class="chip zero">decentralized</span>
+        <span class="chip zero">21 million</span>
+        <span class="chip zero">halving</span>
+        <span class="chip zero">address</span>
+        <span class="chip zero">Byzantine</span>
+        <span class="chip zero">consensus mechanism</span>
+      </div>
+      <p>Two near misses. The phrase &ldquo;chain of blocks&rdquo; appears once, in the section on attackers; the single word &ldquo;blockchain&rdquo; would not become common for several years. And the only &ldquo;miners&rdquo; in the paper are gold miners, in a comparison: new coins are &ldquo;analogous to gold miners expending resources to add gold to circulation.&rdquo;</p>
+      <h3>Trust, attackers and honest nodes</h3>
+      <p>The paper&rsquo;s moral vocabulary is small and repeated. <em>Trust</em> or <em>trusted</em> appears 13 times, almost always as something to remove. <em>Honest</em> appears 15 times and <em>attacker</em> 19, so the paper spends more words on the villain than on the hero. Money words are rare: <em>money</em> three times, <em>cash</em> twice, <em>bank</em> once, <em>gold</em> twice, <em>price</em> never.</p>
+      <div class="chips">
+        <span class="chip">trust / trusted<b>13</b></span>
+        <span class="chip">honest<b>15</b></span>
+        <span class="chip">attacker<b>19</b></span>
+        <span class="chip">privacy<b>5</b></span>
+        <span class="chip">money<b>3</b></span>
+        <span class="chip">cash<b>2</b></span>
+        <span class="chip">gold<b>2</b></span>
+        <span class="chip">bank<b>1</b></span>
+        <span class="chip">electricity<b>1</b></span>
+        <span class="chip">Bitcoin<b>1</b></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 4 -->
+<section class="part" id="sources">
+  <div class="wrap part-grid">
+    <aside class="margin">
+      <div class="partno">PART 4</div>
+      <h2>Eight sources, fifty years</h2>
+      <div class="big num">1957<small>oldest source</small></div>
+      <p class="caption">A probability textbook. The newest is from 2002.</p>
+    </aside>
+    <div class="content">
+      <p>Satoshi cited eight works. Only one of them, b-money, is about digital money at all. The next closest, Hashcash, is a way of making a computer prove it did some work. Three of the eight come from the same two people and are about one problem: how to prove that a document existed at a certain time.</p>
+      <ul class="tl">
+        <li><time>1957</time><b>William Feller, <em>An Introduction to Probability Theory</em></b><p>The classic textbook. Satoshi borrows the &ldquo;gambler&rsquo;s ruin&rdquo; problem from it to work out how far behind an attacker falls. See Part 7.</p></li>
+        <li><time>1980</time><b>Ralph Merkle, &ldquo;Protocols for public key cryptosystems&rdquo;</b><p>Source of the Merkle tree, the trick that lets a block summarise thousands of transactions in one 32-byte hash, so old transactions can be thrown away.</p></li>
+        <li class="key"><time>1991 &middot; 1993 &middot; 1997</time><b>Stuart Haber and W. Scott Stornetta</b><p>Three of the eight references. In 1991 they described how to timestamp a document by chaining hashes, each one including the one before. Their company, Surety, began printing its weekly hash in the classified ads of <em>The New York Times</em> in 1995. When Satoshi writes that a hash can be published &ldquo;in a newspaper or Usenet post&rdquo;, this is the newspaper he means.</p></li>
+        <li><time>1998</time><b>Wei Dai, &ldquo;b-money&rdquo;</b><p>A short proposal for anonymous digital cash where every participant keeps a copy of the accounts. The first reference in the paper. Satoshi <a href="https://gwern.net/doc/bitcoin/2008-nakamoto" target="_blank" rel="noopener">emailed Wei Dai a draft</a> in August 2008, when the paper was still titled &ldquo;Electronic Cash Without a Trusted Third Party&rdquo;.</p></li>
+        <li><time>1999</time><b>Massias, Avila and Quisquater</b><p>A Belgian design for a timestamping service &ldquo;with minimal trust requirements&rdquo;. The least-known name on the list.</p></li>
+        <li><time>2002</time><b>Adam Back, &ldquo;Hashcash&rdquo;</b><p>Proof-of-work as a stamp against email spam: make the sender&rsquo;s computer burn a little effort before each message. Satoshi adopts the mechanism and repurposes it as a vote.</p></li>
+      </ul>
+      <div class="note"><p>Just as telling is who is absent. There is no citation of David Chaum, whose company DigiCash sold anonymous digital money in the 1990s, none of Nick Szabo&rsquo;s &ldquo;bit gold&rdquo;, and none of the Byzantine-generals literature that computer scientists would later use to describe the problem the paper solves. The paper cites engineers of timestamps and spam-stamps, not economists or money theorists.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 5 -->
+<section class="part" id="promises">
+  <div class="wrap part-grid">
+    <aside class="margin">
+      <div class="partno">PART 5</div>
+      <h2>What held and what drifted</h2>
+      <div class="big num">10 min<small>then and now</small></div>
+      <p class="caption">The paper assumed a block every ten minutes, and that still holds. How people use the system has changed far more.</p>
+    </aside>
+    <div class="content">
+      <p>Bitcoin&rsquo;s paper is mostly a design, but a design makes a promise that it will work in the future. Eighteen years is long enough to assess that promise. As the scorecard below shows, the mechanics have held almost exactly, while the social predictions about how people would use the system have drifted, as the system evolved naturally around them.</p>
+      <div class="score">
+        <div class="score-row"><span class="status s-kept">Kept</span><div><h4>Payments without a trusted third party</h4><p>The paper&rsquo;s central promise. Its opening paragraph says the benefits of digital payments &ldquo;are lost if a trusted third party is still required to prevent double-spending&rdquo;. Bitcoin removed that requirement: no bank or company approves a payment, and anyone can run a node and verify every transaction since 2009.</p></div></div>
+        <div class="score-row"><span class="status s-kept">Kept</span><div><h4>Non-reversible transactions</h4><p>The introduction treats reversible payments as a weakness of the banking system. A Bitcoin payment stays paid no matter what (with an exception of a <a href="https://en.bitcoin.it/wiki/Majority_attack" target="_blank" rel="noopener">51% attack</a>, but that's another story). The rule has held under real pressure. Over the years thieves have <a href="https://en.wikipedia.org/wiki/2026_Binance_hack" target="_blank" rel="noopener">stolen many thousands of bitcoin</a>, and victims wanted them back. The chain was never rewritten to return them. Ethereum chose differently: in 2016 it <a href="https://en.wikipedia.org/wiki/The_DAO" target="_blank" rel="noopener">changed its own rules</a> to recover about 3.6 million ether drained from a project called The DAO, and the network split in two.</p></div></div>
+        <div class="score-row"><span class="status s-faded">Faded</span><div><h4>&ldquo;Small casual transactions&rdquo;</h4><p>The introduction complains that the cost of settling disputes cuts off &ldquo;small casual transactions&rdquo;. The paper never promises to fix this, but it is one of the problems it hopes to leave behind. On today&rsquo;s chain a transaction can cost more than a coffee during busy periods, so small payments moved to layers built on top, like Liquid and Lightning.</p></div></div>
+        <div class="score-row"><span class="status s-evolved">Evolved</span><div><h4>&ldquo;One-CPU-one-vote&rdquo;</h4><p>Satoshi imagined ordinary computers voting with their processors. Within four years purpose-built chips made CPUs irrelevant, and the vote concentrated in a handful of mining pools and industrial farms. The chain with the most computing power behind it still wins, as the paper says it should, but a home computer now has no real say in the result.</p></div></div>
+        <div class="score-row"><span class="status s-kept">Kept</span><div><h4>Difficulty adjusts to keep blocks on schedule</h4><p>The paper describes a &ldquo;moving average targeting an average number of blocks per hour&rdquo;. The network does a simpler version: every 2,016 blocks, roughly two weeks, it adjusts the difficulty based on how long those blocks took. Blocks still arrive about every ten minutes, even though computing power has grown a hundred-trillion-fold.</p></div></div>
+        <div class="score-row"><span class="status s-kept">Kept</span><div><h4>Storage will not be a problem</h4><p>Section 7 says old spent transactions can be discarded, and estimates the block headers that remain at 4.2 MB per year. At roughly 975,000 blocks, headers today total about 78 MB, against the paper&rsquo;s 75 MB. The full history with every transaction is over 700 GB, which the paper says most users need not keep. Bitcoin Core added this trimming, called pruning, in 2015, and a pruned node runs comfortably on a few gigabytes.</p></div></div>
+        <div class="score-row"><span class="status s-evolved">Evolved</span><div><h4>Privacy through anonymous keys</h4><p>The paper suggests a fresh key for every payment, and most wallets now do this automatically. But it also admits that &ldquo;some linking is still unavoidable&rdquo;, and an industry of chain-analysis firms now sells that kind of tracing to exchanges and governments.</p></div></div>
+        <div class="score-row"><span class="status s-evolved">Evolved</span><div><h4>Checking payments without the full history</h4><p>Section 8 describes a shortcut: keep only the block headers and you can still confirm a payment without storing every transaction. <a href="https://en.bitcoin.it/wiki/Thin_Client_Security#Thin_Clients" target="_blank" rel="noopener">Some wallets work this way, while others simply ask a server</a>. The paper&rsquo;s extra safeguard, alerts from nodes when they spot an invalid block, was never built.</p></div></div>
+        <div class="score-row"><span class="status s-kept">Kept</span><div><h4>Nodes can leave and rejoin at will</h4><p>Still how it works. A node switched off for a year downloads the missing blocks and catches up, with no permission from anyone.</p></div></div>
+        <div class="score-row"><span class="status s-waiting">Waiting</span><div><h4>Fees overtake new coins</h4><p>The paper says the reward &ldquo;can transition entirely to transaction fees&rdquo;. New coins run out around 2140, but the reward halves about every four years, so fees need to take over long before then. Fees were 0.69% of miner income in August 2026. If each block keeps paying the same amount in fees, they overtake the shrinking reward in the mid-2050s. If fees grow tenfold, that happens around 2040. They have passed the reward only in short bursts, the biggest <a href="https://research.theya.us/bitcoins-fees-spike-to-all-time-high/" target="_blank" rel="noopener">after the April 2024 halving</a>, when they reached 74 percent of what miners earned.</p></div></div>
+        <div class="score-row"><span class="status s-kept">Kept</span><div><h4>&ldquo;Completely inflation free&rdquo; in the end</h4><p>The paper never states the number, but the code fixed it at 21 million. <a href="https://altii.de/the-altii-btc-report-2026-10-31" target="_blank" rel="noopener">About 20.1 million</a>, or 95.7%, already exist. Four halvings have cut the reward from 50 to 3.125 coins per block.</p></div></div>
+        <div class="score-row"><span class="status s-kept">Kept</span><div><h4>Cheating is less profitable than playing fair</h4><p>Section 6 argues a greedy attacker &ldquo;ought to find it more profitable to play by the rules&rdquo;. In eighteen years nobody has rewritten Bitcoin&rsquo;s history, though smaller networks copying the design have been attacked this way repeatedly.</p></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 6 -->
+<section class="part" id="missing">
+  <div class="wrap part-grid">
+    <aside class="margin">
+      <div class="partno">PART 6</div>
+      <h2>What the paper never mentions</h2>
+      <div class="big num">21M<small>not in the paper</small></div>
+      <p class="caption">The most famous number in Bitcoin comes from the code, not the paper.</p>
+    </aside>
+    <div class="content">
+      <p>Ask people what Bitcoin is and you will hear about a blockchain, a 21 million coin limit, miners, wallets and the halving. The paper mentions none of them. The word &ldquo;miners&rdquo; turns up once, and it is about gold. The rest came from the software released two months later and from the people who ran it.</p>
+      <div class="grid2">
+        <div class="mini"><h4>The 21 million cap</h4><p>The paper says only that &ldquo;a predetermined number of coins&rdquo; will enter circulation. The number, the 50-coin starting reward and the halving schedule all live in the code.</p></div>
+        <div class="mini"><h4>Miners</h4><p>Nodes &ldquo;generate&rdquo; coins; nobody mines. The gold-mining comparison in Section 6 is the seed the word grew from.</p></div>
+        <div class="mini"><h4>Wallets and addresses</h4><p>Coins go to &ldquo;public keys&rdquo;. The user-friendly address format and the idea of a wallet arrived with the first release.</p></div>
+        <div class="mini"><h4>A block size limit</h4><p>No limit is mentioned. The 1 MB cap was added quietly in 2010 and became the most bitter argument in Bitcoin&rsquo;s history.</p></div>
+        <div class="mini"><h4>The genesis block</h4><p>Nothing about a first block or the newspaper headline Satoshi would later embed in it: &ldquo;Chancellor on brink of second bailout for banks&rdquo;.</p></div>
+        <div class="mini"><h4>Scripting</h4><p>The small programming language inside every Bitcoin transaction, which later made multi-signature and Lightning possible, is absent.</p></div>
+        <div class="mini"><h4>Price</h4><p>The paper contains no currency symbol and no suggestion that the coins would be worth anything in dollars.</p></div>
+        <div class="mini"><h4>The author</h4><p>&ldquo;Satoshi Nakamoto&rdquo; appears only in the byline. There is no affiliation, no acknowledgement, no funding statement, and no &ldquo;I&rdquo;.</p></div>
+      </div>
+      <h3>And some things people assume are missing, but are there</h3>
+      <p>The ten-minute block time is present, though only as a supposition: &ldquo;If we suppose blocks are generated every 10 minutes&rdquo;. Transaction fees are explained. Change outputs, pruning, light clients and the idea of using a new key for every payment are all in the text. The 2008 reader who finished the paper knew how the machine worked; what they could not know was what it would become.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 7 -->
+<section class="part" id="math">
+  <div class="wrap part-grid">
+    <aside class="margin">
+      <div class="partno">PART 7</div>
+      <h2>The math, with a coin flip</h2>
+      <div class="big num">0.024%<small>at six confirmations</small></div>
+      <p class="caption">Chance an attacker with a tenth of the network rewrites a payment buried six blocks deep.</p>
+    </aside>
+    <div class="content">
+      <p>The only serious mathematics in the paper answers one question. If someone pays you and then secretly tries to rewrite history to take the money back, how long should you wait before you trust the payment? Satoshi treats it as a gambler&rsquo;s ruin, a probability problem centuries old, and cites a 1957 textbook for it.</p>
+      <p>Think of each new block as one flip of a weighted coin. Most flips go to the honest network, and the rest go to the attacker. The attacker starts behind, because the real payment is already in a block, and has to make up that gap. With the odds against them, the paper notes, &ldquo;if he doesn&rsquo;t make a lucky lunge forward early on, his chances become vanishingly small as he falls further behind.&rdquo;</p>
+      <div class="tool">
+        <div class="sliders">
+          <div><label for="q">Attacker&rsquo;s share of the network: <span id="qv">10%</span></label><input type="range" id="q" min="1" max="49" value="10" step="1"></div>
+          <div><label for="z">Blocks buried after the payment: <span id="zv">6</span></label><input type="range" id="z" min="0" max="30" value="6" step="1"></div>
+        </div>
+        <div class="result"><b id="pv" class="num">0.0243%</b><span id="pt">About one chance in 4,100 that the payment could still be reversed.</span></div>
+        <p class="caption" style="margin:.75rem 0 0">Computed with the C function printed on page 7 of the paper, translated line for line into JavaScript.</p>
+      </div>
+      <div class="chart chart-wrap">
+        <h4>Probability the attacker ever catches up</h4>
+        <p class="sub">Logarithmic scale. The two cases Satoshi tabulated, plus the one you set above.</p>
+        <svg id="pchart" viewBox="0 0 640 320" role="img" aria-label="Line chart of attacker success probability against confirmations"></svg>
+        <div class="legend"><span><i style="background:var(--accent)"></i>Attacker has 10%</span><span><i style="background:var(--accent-2)"></i>Attacker has 30%</span><span><i style="background:var(--fg)"></i>Your setting</span></div>
+        <div class="tip" id="ptip"></div>
+      </div>
+      <p>This is where the folk rule of &ldquo;wait for six confirmations&rdquo; comes from. In the paper&rsquo;s own table, an attacker with ten percent of the network has a 0.024 percent chance of success after six blocks. Exchanges adopted six as a round number, and it stuck. Against a stronger attacker the wait grows fast: at 30 percent you need 24 blocks, about four hours, for the same comfort, and at 45 percent you need 340.</p>
+      <div class="note"><p>The paper&rsquo;s nine lines of C are the only code it contains, and they work unchanged today. Everything on this page&rsquo;s calculator comes from them. The tables on page 8 of the paper reproduce exactly.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 8 -->
+<section class="part" id="fingerprints">
+  <div class="wrap part-grid">
+    <aside class="margin">
+      <div class="partno">PART 8</div>
+      <h2>Fingerprints of an anonymous author</h2>
+      <div class="big">favour</div>
+      <p class="caption">One British spelling, next to the American &ldquo;characterized&rdquo;.</p>
+    </aside>
+    <div class="content">
+      <p>Nobody knows who wrote the paper, and this page will not guess. But a document always says something about its maker, and the small tells here are more interesting than any theory.</p>
+      <div class="grid2">
+        <div class="mini"><h4>Mixed spelling</h4><p>&ldquo;Favour&rdquo; is British; &ldquo;characterized&rdquo; is American or Oxford. The document&rsquo;s language setting is British English. The mix is standard in Canada, in Oxford house style, and among people who learned English in more than one place.</p></div>
+        <div class="mini"><h4>Two clocks</h4><p>The October 2008 draft was <a href="https://blog.wizsec.jp/2023/12/recreating-the-bitcoin-whitepaper.html" target="_blank" rel="noopener">exported on a computer set to UTC&minus;7</a>. The March 2009 final was exported at UTC&minus;6. Both dates fall inside North American daylight time, so this is Pacific time then Mountain time, or one clock whose settings changed.</p></div>
+        <div class="mini"><h4>Always &ldquo;he&rdquo;</h4><p>The attacker, the payee and the user are &ldquo;he&rdquo; 23 times and &ldquo;she&rdquo; never. The author is &ldquo;we&rdquo; 20 times, in the academic manner, and &ldquo;I&rdquo; never.</p></div>
+        <div class="mini"><h4>One &ldquo;obviously&rdquo;</h4><p>&ldquo;The timestamp proves that the data must have existed at the time, obviously, in order to get into the hash.&rdquo; The paper&rsquo;s single flash of impatience.</p></div>
+        <div class="mini"><h4>Free tools, free email</h4><p>Written in OpenOffice, a free alternative to Microsoft Word, with a GMX address, a free German webmail service. The earlier draft used a different anonymous provider. Nothing in the toolchain cost money or required a real name.</p></div>
+        <div class="mini"><h4>Hand-drawn diagrams</h4><p>The eight figures were drawn in OpenOffice&rsquo;s own drawing tool on a grid. <a href="https://blog.wizsec.jp/2023/12/recreating-the-bitcoin-whitepaper.html" target="_blank" rel="noopener">Researchers who rebuilt the PDF byte-for-byte in 2023</a> found the arrowheads come out slightly thick, a quirk of that software&rsquo;s PDF writer.</p></div>
+      </div>
+      <div class="note"><p>That 2023 reconstruction has a sobering conclusion for anyone hoping the file can settle the authorship question. Because the paper can be recreated exactly with a Windows XP machine and OpenOffice 2.4, possessing an identical file proves nothing. The paper can be verified; its author cannot.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 9 -->
+<section class="part" id="thennow">
+  <div class="wrap part-grid">
+    <aside class="margin">
+      <div class="partno">PART 9</div>
+      <h2>Then and now</h2>
+      <div class="big num">95.7%</div>
+      <p class="caption">of all bitcoin that will ever exist has already been created.</p>
+    </aside>
+    <div class="content">
+      <p>The paper describes a network of a few hobbyists&rsquo; PCs. Here is the world it assumed set against the world on its eighteenth birthday. Figures are rounded, and the links lead to their sources.</p>
+      <div class="tn">
+        <div class="tn-row"><div class="lab">Price of one bitcoin</div><div class="then"><b>none</b><small>No exchange existed. The first quoted rate, in October 2009, was 1,309 bitcoin per US dollar.</small></div><div><b class="num">&asymp; $77,000</b><small><a href="https://altii.de/the-altii-btc-report-2026-10-31" target="_blank" rel="noopener">31 Oct 2026</a>. <a href="https://www.coingecko.com/en/coins/bitcoin" target="_blank" rel="noopener">Peak so far</a> about $126,000, October 2025.</small></div></div>
+        <div class="tn-row"><div class="lab">Computing power securing the chain</div><div class="then"><b>one PC</b><small>A few million hash attempts per second in January 2009.</small></div><div><b class="num">&asymp; 1,100 EH/s</b><small><a href="https://www.pickaxe.io/resources/news/bitcoin-hashrate-surges-past-1000-ehs-amid-difficulty-hikes" target="_blank" rel="noopener">As of 24 Oct 2026</a>. Over a sextillion attempts per second: a hundred-trillion-fold increase.</small></div></div>
+        <div class="tn-row"><div class="lab">Coins in existence</div><div class="then"><b>0</b><small>The first 50 were created on 3 January 2009.</small></div><div><b class="num">20.1 million</b><small><a href="https://altii.de/the-altii-btc-report-2026-10-31" target="_blank" rel="noopener">95.7% of the 21 million cap</a>.</small></div></div>
+        <div class="tn-row"><div class="lab">Blocks</div><div class="then"><b>0</b></div><div><b class="num">&asymp; 975,000</b><small>Still arriving about every ten minutes.</small></div></div>
+        <div class="tn-row"><div class="lab">Reward for finding a block</div><div class="then"><b>50 BTC</b><small>Worth nothing in dollars.</small></div><div><b class="num">3.125 BTC</b><small>After four halvings. Roughly $240,000 at today&rsquo;s price.</small></div></div>
+        <div class="tn-row"><div class="lab">Electricity</div><div class="then"><b>&ldquo;CPU time and electricity&rdquo;</b><small>Mentioned once, as the cost that makes coins scarce.</small></div><div><b class="num">&asymp; 138 TWh / year</b><small>Cambridge estimate, 2026, <a href="https://www.solcard.cc/blog/how-much-energy-does-bitcoin-use" target="_blank" rel="noopener">reported by SolCard</a>. In the range of Poland&rsquo;s annual consumption.</small></div></div>
+        <div class="tn-row"><div class="lab">Size of the full record</div><div class="then"><b>4.2 MB / year</b><small>The paper&rsquo;s estimate for block headers alone, which has held.</small></div><div><b class="num">&gt; 700 GB</b><small>Every transaction since 2009. Headers alone: about 78 MB.</small></div></div>
+        <div class="tn-row"><div class="lab">Legal status</div><div class="then"><b>unmentioned</b><small>The paper never discusses governments.</small></div><div><b>legal tender once</b><small>El Salvador adopted bitcoin as legal tender in 2021 and <a href="https://en.wikipedia.org/wiki/Bitcoin_in_El_Salvador" target="_blank" rel="noopener">rescinded the status in 2025</a> under an IMF agreement.</small></div></div>
+        <div class="tn-row"><div class="lab">How people hold it</div><div class="then"><b>your own keys</b><small>The only way the paper imagines.</small></div><div><b>11 US ETFs</b><small>Spot bitcoin funds began trading in January 2024. Many holders never touch a key.</small></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 10 -->
+<section class="part" id="halloween">
+  <div class="wrap part-grid">
+    <aside class="margin">
+      <div class="partno">PART 10</div>
+      <h2>Halloween 2008</h2>
+      <div class="big num">14:10<small>EDT</small></div>
+      <p class="caption">The time stamp on the announcement, a Friday afternoon.</p>
+    </aside>
+    <div class="content">
+      <p>In the middle of a global banking crisis, someone nobody had heard of sent an email to a cryptography mailing list. The first reply doubted the idea could scale. A week after the email, Hal Finney called it promising, and two months later he received the first bitcoin ever sent.</p>
+      <ul class="tl">
+        <li><time>18 Aug 2008</time><b>bitcoin.org registered</b><p>Through an anonymous registration service.</p></li>
+        <li><time>22 Aug 2008</time><b><a href="https://gwern.net/doc/bitcoin/2008-nakamoto" target="_blank" rel="noopener">A draft goes to Wei Dai</a></b><p>Titled &ldquo;Electronic Cash Without a Trusted Third Party&rdquo;. Satoshi asks for the right year to cite b-money.</p></li>
+        <li><time>3 Oct 2008</time><b>The PDF is created</b><p>Four weeks before anyone outside a small circle sees it.</p></li>
+        <li class="key"><time>Fri 31 Oct 2008, 14:10 EDT</time><b><a href="https://www.metzdowd.com/pipermail/cryptography/2008-October/014810.html" target="_blank" rel="noopener">&ldquo;Bitcoin P2P e-cash paper&rdquo;</a></b><p>&ldquo;I&rsquo;ve been working on a new electronic cash system that&rsquo;s fully peer-to-peer, with no trusted third party.&rdquo; A link to bitcoin.pdf and five bullet points. That is the whole announcement.</p></li>
+        <li><time>2 Nov 2008</time><b>The first reply</b><p><a href="https://www.metzdowd.com/pipermail/cryptography/2008-November/014814.html" target="_blank" rel="noopener">James A. Donald</a>: &ldquo;We very, very much need such a system, but the way I understand your proposal, it does not seem to scale to the required size.&rdquo; The scaling argument has never stopped.</p></li>
+        <li><time>7 Nov 2008</time><b><a href="https://www.metzdowd.com/pipermail/cryptography/2008-November/014827.html" target="_blank" rel="noopener">Hal Finney</a></b><p>&ldquo;Bitcoin seems to be a very promising idea.&rdquo; He also notes that much of the practical detail &ldquo;is largely missing from the paper&rdquo;.</p></li>
+        <li class="key"><time>3 Jan 2009</time><b>The genesis block</b><p>Sixty-four days after the announcement, the first block is created with a headline from that day&rsquo;s <em>Times</em> of London embedded in it: &ldquo;Chancellor on brink of second bailout for banks&rdquo;.</p></li>
+        <li><time>12 Jan 2009</time><b>First transaction</b><p>Ten bitcoin from Satoshi to Hal Finney.</p></li>
+        <li><time>24 Mar 2009</time><b>The paper is revised</b><p>The version you can download above. Wording only.</p></li>
+        <li><time>5 Oct 2009</time><b>A price</b><p>New Liberty Standard publishes the first exchange rate, based on the electricity cost of generating coins: 1,309 bitcoin to the dollar.</p></li>
+        <li><time>Apr 2011</time><b>Satoshi leaves</b><p>In a last known email: &ldquo;I&rsquo;ve moved on to other things.&rdquo;</p></li>
+        <li><time>6 Apr 2013</time><b>The paper is written into the chain</b><p><a href="https://mempool.space/tx/54e48e5f5c656b26c3bca14a8c95aa583d07ebe84dde3b7dd4a78f4e4186e713" target="_blank" rel="noopener">Block 230,009</a>. The document now travels with every copy of the network it describes.</p></li>
+      </ul>
+      <p>Eighteen years on, the nine pages read as both complete and incomplete. Everything about how the machine works is there and still true. Nothing about what the machine would mean is there at all, because that part was never the author&rsquo;s to write.</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <h3>How the numbers were made</h3>
+    <p>Word counts come from the text of the PDF, extracted with <code>pdftotext</code>. &ldquo;Main text&rdquo; is everything from the title through the conclusion; the reference list is excluded. Singular and plural forms are counted together where stated. The readability score is the Flesch reading-ease formula applied to the main text. The attacker-probability calculator is a direct translation of the C function on page 7 of the paper, and reproduces the tables on page 8 exactly. The fingerprint is the SHA-256 hash of the file linked at the top of the page.</p>
+    <p>Block count, headers size and the 2009 hashrate are estimates. The whitepaper is distributed under the MIT licence; this page is published under the same terms.</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  const fmt = n => n.toLocaleString('en-US');
+
+  function bars(id, rows, opts){
+    const el = document.getElementById(id); if(!el) return;
+    const max = Math.max(...rows.map(r=>r.v));
+    el.innerHTML = rows.map(r=>`<div class="bar${r.hl?' hl':''}" title="${r.l.replace(/&[a-z0-9#]+;/g,'')}: ${fmt(r.v)}">
+      <div class="lbl">${r.href?`<a href="${r.href}" target="_blank" rel="noopener">${r.l}</a>`:r.l}</div>
+      <div class="track"><div class="fill" style="width:${(r.v/max*100).toFixed(1)}%"></div></div>
+      <div class="val num">${(r.approx?'~':'')+fmt(r.v)}</div></div>`).join('');
+  }
+
+  bars('lenbars', [
+    {l:'Watson &amp; Crick, DNA structure (1953)', v:900, approx:true, href:'https://www.nature.com/articles/171737a0'},
+    {l:'Bitcoin whitepaper', v:3315, hl:true},
+    {l:'&ldquo;Attention Is All You Need&rdquo; (2017)', v:6100, approx:true, href:'https://arxiv.org/abs/1706.03762'},
+    {l:'Diffie &amp; Hellman, key exchange (1976)', v:10700, approx:true, href:'https://ee.stanford.edu/~hellman/publications/24.pdf'},
+    {l:'Shannon, information theory (1948)', v:29000, approx:true, href:'https://ieeexplore.ieee.org/document/6773024'}
+  ]);
+
+  bars('secbars', [
+    {l:'Title and abstract', v:194},
+    {l:'1 Introduction', v:268},
+    {l:'2 Transactions', v:334},
+    {l:'3 Timestamp Server', v:89},
+    {l:'4 Proof-of-Work', v:328},
+    {l:'5 Network', v:241},
+    {l:'6 Incentive', v:237},
+    {l:'7 Reclaiming Disk Space', v:179},
+    {l:'8 Simplified Payment Verification', v:248},
+    {l:'9 Combining and Splitting Value', v:125},
+    {l:'10 Privacy', v:190},
+    {l:'11 Calculations', v:702, hl:true},
+    {l:'12 Conclusion', v:180}
+  ]);
+
+  bars('wordbars', [
+    {l:'transaction(s)', v:68},
+    {l:'block(s)', v:64},
+    {l:'hash', v:42},
+    {l:'node(s)', v:38},
+    {l:'chain', v:25},
+    {l:'network', v:21},
+    {l:'attacker', v:19},
+    {l:'proof-of-work', v:18},
+    {l:'coin(s)', v:16},
+    {l:'honest', v:15},
+    {l:'owner', v:15},
+    {l:'trust / trusted', v:13},
+    {l:'timestamp', v:10},
+    {l:'CPU', v:9},
+    {l:'mint', v:6},
+    {l:'peer-to-peer', v:6},
+    {l:'Bitcoin', v:1, hl:true}
+  ]);
+
+  /* --- fingerprint check --- */
+  const REAL = 'b1674191a88ec5cdd733e4240a81803105dc412d6c6708d53ab94fc248f4f553';
+  const drop = document.getElementById('drop'), inp = document.getElementById('fileinput'), verdict = document.getElementById('verdict');
+  async function check(file){
+    if(!file) return;
+    verdict.className = 'verdict'; verdict.textContent = 'Hashing…'; verdict.style.display='block';
+    try{
+      const buf = await file.arrayBuffer();
+      const dig = await crypto.subtle.digest('SHA-256', buf);
+      const hex = [...new Uint8Array(dig)].map(b=>b.toString(16).padStart(2,'0')).join('');
+      const ok = hex === REAL;
+      verdict.className = 'verdict ' + (ok?'ok':'no');
+      verdict.innerHTML = (ok
+        ? `<strong>Match.</strong> ${file.name} (${fmt(file.size)} bytes) is byte-for-byte the whitepaper Satoshi published in March 2009.`
+        : `<strong>No match.</strong> ${file.name} (${fmt(file.size)} bytes) differs from the original. It may be a re-export, a scan, or a different document.`)
+        + `<code>${hex}</code>`;
+    }catch(e){
+      verdict.className='verdict no'; verdict.textContent='Could not read that file in this browser.';
+    }
+  }
+  if(drop){
+    drop.addEventListener('click', ()=>inp.click());
+    drop.addEventListener('keydown', e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); inp.click(); } });
+    inp.addEventListener('change', ()=>check(inp.files[0]));
+    ['dragenter','dragover'].forEach(ev=>drop.addEventListener(ev, e=>{e.preventDefault(); drop.classList.add('over');}));
+    ['dragleave','drop'].forEach(ev=>drop.addEventListener(ev, e=>{e.preventDefault(); drop.classList.remove('over');}));
+    drop.addEventListener('drop', e=>check(e.dataTransfer.files[0]));
+  }
+
+  /* --- Satoshi's AttackerSuccessProbability, page 7 --- */
+  function attackerSuccess(q, z){
+    const p = 1.0 - q;
+    const lambda = z * (q / p);
+    let sum = 1.0;
+    for(let k=0;k<=z;k++){
+      let poisson = Math.exp(-lambda);
+      for(let i=1;i<=k;i++) poisson *= lambda / i;
+      sum -= poisson * (1 - Math.pow(q / p, z - k));
+    }
+    return Math.max(sum, 0);
+  }
+  const qEl=document.getElementById('q'), zEl=document.getElementById('z'), qv=document.getElementById('qv'), zv=document.getElementById('zv'), pv=document.getElementById('pv'), pt=document.getElementById('pt');
+  function pct(x){
+    if(x>=0.1) return (x*100).toFixed(1)+'%';
+    if(x>=0.001) return (x*100).toFixed(2)+'%';
+    if(x>=1e-6) return (x*100).toPrecision(2)+'%';
+    return '<0.0001%';
+  }
+  function describe(x){
+    if(x>=0.999) return 'Nothing is buried yet, so the attacker simply broadcasts a different version.';
+    if(x>=0.5) return 'More likely than not. Do not hand over the goods.';
+    if(x>=0.05) return `About one chance in ${fmt(Math.round(1/x))}. Fine for a coffee, not for a car.`;
+    if(x>=1e-7) return `About one chance in ${fmt(Math.round(1/x))} that the payment could still be reversed.`;
+    return 'Less than one chance in ten million. Effectively final.';
+  }
+
+  /* --- chart --- */
+  const svg = document.getElementById('pchart'), tip = document.getElementById('ptip');
+  const W=640,H=320, m={t:16,r:16,b:40,l:78};
+  const iw=W-m.l-m.r, ih=H-m.t-m.b, ZMAX=30, YMIN=1e-7;
+  const x = z => m.l + z/ZMAX*iw;
+  const y = p => { const v=Math.max(p,YMIN); return m.t + (Math.log10(1)-Math.log10(v))/(Math.log10(1)-Math.log10(YMIN))*ih; };
+  function path(q){ let d=''; for(let z=0;z<=ZMAX;z++){ const p=attackerSuccess(q,z); if(p<YMIN) break; d += (z?' L':'M')+x(z).toFixed(1)+' '+y(p).toFixed(1);} return d; }
+  function draw(q, z){
+    const ticks=[1,1e-1,1e-2,1e-3,1e-4,1e-5,1e-6,1e-7];
+    const lab = v => v>=0.01? (v*100)+'%' : v>=1e-6 ? (v*100).toExponential(0).replace('e-','e-')+'%' : '≤1e-5%';
+    let s = '<g class="grid">';
+    ticks.forEach(v=>{ s+=`<line x1="${m.l}" x2="${W-m.r}" y1="${y(v).toFixed(1)}" y2="${y(v).toFixed(1)}"/>`; });
+    s += '</g>';
+    ticks.forEach(v=>{ s+=`<text class="muted" x="${m.l-8}" y="${(y(v)+4).toFixed(1)}" text-anchor="end">${v>=0.01?(v*100)+'%':v===1e-3?'0.1%':v===1e-4?'0.01%':v===1e-5?'0.001%':v===1e-6?'0.0001%':'≤0.00001%'}</text>`; });
+    for(let z=0;z<=ZMAX;z+=5){ s+=`<text class="muted" x="${x(z).toFixed(1)}" y="${H-m.b+18}" text-anchor="middle">${z}</text>`; }
+    s += `<text class="muted" x="${m.l+iw/2}" y="${H-4}" text-anchor="middle">blocks after the payment</text>`;
+    s += `<line class="axis" x1="${m.l}" x2="${W-m.r}" y1="${m.t+ih}" y2="${m.t+ih}"/>`;
+    // six-confirmation marker
+    s += `<line x1="${x(6)}" x2="${x(6)}" y1="${m.t}" y2="${m.t+ih}" stroke="var(--line)" stroke-dasharray="3 4"/>`;
+    s += `<text class="muted" x="${x(6)+5}" y="${m.t+12}">6 confirmations</text>`;
+    s += `<path d="${path(0.1)}" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linejoin="round"/>`;
+    s += `<path d="${path(0.3)}" fill="none" stroke="var(--accent-2)" stroke-width="2" stroke-linejoin="round"/>`;
+    if(q!==0.1 && q!==0.3) s += `<path d="${path(q)}" fill="none" stroke="var(--fg)" stroke-width="2" stroke-dasharray="5 4" stroke-linejoin="round"/>`;
+    const py = attackerSuccess(q,z);
+    s += `<circle cx="${x(z).toFixed(1)}" cy="${y(py).toFixed(1)}" r="6" fill="var(--fg)" stroke="var(--surface)" stroke-width="2"/>`;
+    // hover targets
+    for(let zz=0;zz<=ZMAX;zz++){ s += `<rect data-z="${zz}" x="${(x(zz)-iw/ZMAX/2).toFixed(1)}" y="${m.t}" width="${(iw/ZMAX).toFixed(1)}" height="${ih}" fill="transparent"/>`; }
+    svg.innerHTML = s;
+  }
+  function update(){
+    const q = +qEl.value/100, z = +zEl.value;
+    qv.textContent = qEl.value+'%'; zv.textContent = z;
+    const p = attackerSuccess(q,z);
+    pv.textContent = pct(p); pt.textContent = describe(p);
+    draw(q,z);
+  }
+  if(qEl){
+    qEl.addEventListener('input', update); zEl.addEventListener('input', update);
+    svg.addEventListener('mousemove', e=>{
+      const r = e.target.closest('rect[data-z]'); if(!r){ tip.classList.remove('show'); return; }
+      const z=+r.dataset.z, q=+qEl.value/100;
+      const box = svg.getBoundingClientRect(), wrap = svg.parentElement.getBoundingClientRect();
+      const sx = box.width/W, sy = box.height/H;
+      tip.textContent = `${z} blocks · 10%: ${pct(attackerSuccess(0.1,z))} · 30%: ${pct(attackerSuccess(0.3,z))} · you: ${pct(attackerSuccess(q,z))}`;
+      tip.style.left = (box.left-wrap.left + x(z)*sx)+'px';
+      tip.style.top = (box.top-wrap.top + y(Math.max(attackerSuccess(q,z),YMIN))*sy)+'px';
+      tip.classList.add('show');
+    });
+    svg.addEventListener('mouseleave', ()=>tip.classList.remove('show'));
+    update();
+  }
+})();
+</script>
+</body>
+</html>
